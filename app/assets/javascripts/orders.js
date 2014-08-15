@@ -33,7 +33,9 @@ $(document).ready(function(){
         .tickFormat(d3.format(',.2f'));
 
     d3.select('#chart1 svg')
-      .datum(gon.chart_data)
+  	//Using content tag here versus gon to look at other way to pass JSON
+	  .datum($('#orders_chart').data('orders'))
+//      .datum(gon.chart_data)
       .call(chart);
 
     nv.utils.windowResize(chart.update);
