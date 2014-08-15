@@ -12,9 +12,14 @@ Things you may want to cover:
 * Deployment instructions
 
    $ bundle install
+   
+   Copy config/database.yml.example file to config/database.yml and overwrite
+   database connection settings if necessary.
+ 
+   $ bundle exec rake db:reset
    $ bundle exec rake db:migrate
 
-   To load database with test data   
+   To load database with test data:     
    $ bundle exec rake db:populate
    
    $ rails server
