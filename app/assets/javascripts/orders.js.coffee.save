@@ -1,0 +1,62 @@
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+
+# Wrapping in nv.addGraph allows for '0 timeout render', stores rendered charts in nv.graphs, and may do more in the future... it's NOT required
+
+chart = undefined
+nv.addGraph ->
+  chart = nv.models.lineChart().options(
+    margin:
+      left: 100
+      bottom: 100
+
+    x: (d, i) ->
+      i
+
+    showXAxis: true
+    showYAxis: true
+    transitionDuration: 250
+  )
+  chart.xAxis.axisLabel("Time (s)")
+        .tickFormat d3.format(",.1f")
+  chart.yAxis.axisLabel("Voltage (v)")
+        .tickFormat d3.format(",.2f")
+  d3.select("#chart1 svg").datum(sinAndCos()).call chart
+  # TODO: Figure out a good way to do this automatically
+  nv.utils.windowResize chart.update
+  # nv.utils.windowResize -> d3.select('#chart1 svg').call(chart)
+  chart.dispatch.on "stateChange", (e) ->
+    nv.log "New State:", JSON.stringify(e)
+  return chart
+  
+sinAndCos = ->
+  for i in [0..100]
+    # the nulls are to show how defined works
+    sin.push x: i, y: if (i % 10 == 5) then null else Math.sin(i/10) 
+    cos.push( x: i, y: .5 * Math.cos(i/10) )
+    rand.push({x:i, y: Math.random() / 10})
+    rand2.push(x: i, y: Math.cos(i/10) + Math.random() / 10)
+  [ 
+    { 
+      area: true
+      values: sin
+      key: "Sine Wave"
+      color: "#667711"
+    }
+    {
+      values: cos,
+      key: "Cosine Wave"
+      color: "#2ca02c"
+    }
+    {
+      values: rand,
+      key: "Random Points"
+      color: "#2222ff"
+    }
+    {
+      values: rand2
+      key: "Random Cosine"
+      color: "#ff7f0e"
+    }
+   ]
